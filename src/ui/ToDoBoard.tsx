@@ -47,6 +47,13 @@ function ToDoBoard() {
 
 	function handleDragOver(e: React.DragEvent) {
 		e.preventDefault();
+		console.log("drag start");
+	}
+
+	function handleDrop(e: React.DragEvent) {
+		e.preventDefault();
+		const data = JSON.parse(e.dataTransfer.getData("text/plain"));
+		console.log("dropped", data);
 	}
 
 	return (
@@ -65,12 +72,14 @@ function ToDoBoard() {
 						<React.Fragment key={row.team}>
 							<div
 								className={cellClass + " flex justify-center"}
-								onDragOver={handleDragOver}>
+								onDragOver={handleDragOver}
+								onDrop={handleDrop}>
 								{row.team}
 							</div>
 							<div
 								className={cellClass}
-								onDragOver={handleDragOver}>
+								onDragOver={handleDragOver}
+								onDrop={handleDrop}>
 								{row.backlog.map((task) => (
 									<TaskCard
 										key={task.id}
@@ -82,48 +91,52 @@ function ToDoBoard() {
 							</div>
 							<div
 								className={cellClass}
-								onDragOver={handleDragOver}>
+								onDragOver={handleDragOver}
+								onDrop={handleDrop}>
 								{row.todo.map((task) => (
 									<TaskCard
 										key={task.id}
 										task={task}
 										team={row.team}
-										stage={row.team}
+										stage='todo'
 									/>
 								))}
 							</div>
 							<div
 								className={cellClass}
-								onDragOver={handleDragOver}>
+								onDragOver={handleDragOver}
+								onDrop={handleDrop}>
 								{row.inprogress.map((task) => (
 									<TaskCard
 										key={task.id}
 										task={task}
 										team={row.team}
-										stage={row.team}
+										stage='backlog'
 									/>
 								))}
 							</div>
 							<div
 								className={cellClass}
-								onDragOver={handleDragOver}>
+								onDragOver={handleDragOver}
+								onDrop={handleDrop}>
 								{row.staging.map((task) => (
 									<TaskCard
 										task={task}
 										team={row.team}
-										stage={row.team}
+										stage='backlog'
 									/>
 								))}
 							</div>
 							<div
 								className={cellClass}
-								onDragOver={handleDragOver}>
+								onDragOver={handleDragOver}
+								onDrop={handleDrop}>
 								{row.done.map((task) => (
 									<TaskCard
 										key={task.id}
 										task={task}
 										team={row.team}
-										stage={row.team}
+										stage='backlog'
 									/>
 								))}
 							</div>
