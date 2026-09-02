@@ -54,6 +54,24 @@ function ToDoBoard() {
 		e.preventDefault();
 		const data = JSON.parse(e.dataTransfer.getData("text/plain"));
 		console.log("dropped", data);
+
+		const sourceRow = rows.find((row) => row.team === data.team);
+		const stageTask = sourceRow?.[data.stage as keyof TeamRow] as Task[];
+		const task = stageTask?.find((t) => t.id === data.taskId);
+		console.log("sourceRow", sourceRow);
+		console.log("stageTask", stageTask);
+		console.log("task", task);
+
+		setRows((prevRows) =>
+			prevRows.map((row) => {
+				if (row.team !== data.team) return row;
+
+				return {
+					...row,
+					[data.stage]: stageTask?.filter((t) => t.id !== data.taskId),
+				};
+			}),
+		);
 	}
 
 	return (
