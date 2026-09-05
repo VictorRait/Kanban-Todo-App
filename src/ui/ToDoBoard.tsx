@@ -50,17 +50,19 @@ function ToDoBoard() {
 		console.log("drag start");
 	}
 
-	function handleDrop(e: React.DragEvent) {
+	function handleDrop(
+		e: React.DragEvent,
+		targetTeam: string,
+		targetStage: keyof TeamRow,
+	) {
 		e.preventDefault();
 		const data = JSON.parse(e.dataTransfer.getData("text/plain"));
-		console.log("dropped", data);
 
 		const sourceRow = rows.find((row) => row.team === data.team);
 		const stageTask = sourceRow?.[data.stage as keyof TeamRow] as Task[];
 		const task = stageTask?.find((t) => t.id === data.taskId);
-		console.log("sourceRow", sourceRow);
-		console.log("stageTask", stageTask);
-		console.log("task", task);
+		if (!task) return;
+		console.log("data", data);
 
 		setRows((prevRows) =>
 			prevRows.map((row) => {
@@ -69,6 +71,17 @@ function ToDoBoard() {
 				return {
 					...row,
 					[data.stage]: stageTask?.filter((t) => t.id !== data.taskId),
+				};
+			}),
+		);
+
+		setRows((prevRows) =>
+			prevRows.map((row) => {
+				if (row.team !== targetTeam) return row;
+
+				return {
+					...row,
+					[targetStage]: [...row[targetStage], task],
 				};
 			}),
 		);
@@ -88,16 +101,13 @@ function ToDoBoard() {
 				{rows.map((row) => {
 					return (
 						<React.Fragment key={row.team}>
-							<div
-								className={cellClass + " flex justify-center"}
-								onDragOver={handleDragOver}
-								onDrop={handleDrop}>
+							<div className={cellClass + " flex justify-center"}>
 								{row.team}
 							</div>
 							<div
 								className={cellClass}
 								onDragOver={handleDragOver}
-								onDrop={handleDrop}>
+								onDrop={(e) => handleDrop(e, row.team, "backlog")}>
 								{row.backlog.map((task) => (
 									<TaskCard
 										key={task.id}
@@ -110,7 +120,7 @@ function ToDoBoard() {
 							<div
 								className={cellClass}
 								onDragOver={handleDragOver}
-								onDrop={handleDrop}>
+								onDrop={(e) => handleDrop(e, row.team, "todo")}>
 								{row.todo.map((task) => (
 									<TaskCard
 										key={task.id}
@@ -123,38 +133,39 @@ function ToDoBoard() {
 							<div
 								className={cellClass}
 								onDragOver={handleDragOver}
-								onDrop={handleDrop}>
+								onDrop={(e) => handleDrop(e, row.team, "inprogress")}>
 								{row.inprogress.map((task) => (
 									<TaskCard
 										key={task.id}
 										task={task}
 										team={row.team}
-										stage='backlog'
+										stage='inprogress'
 									/>
 								))}
 							</div>
 							<div
 								className={cellClass}
 								onDragOver={handleDragOver}
-								onDrop={handleDrop}>
+								onDrop={(e) => handleDrop(e, row.team, "staging")}>
 								{row.staging.map((task) => (
 									<TaskCard
+										key={task.id}
 										task={task}
 										team={row.team}
-										stage='backlog'
+										stage='staging'
 									/>
 								))}
 							</div>
 							<div
 								className={cellClass}
 								onDragOver={handleDragOver}
-								onDrop={handleDrop}>
+								onDrop={(e) => handleDrop(e, row.team, "done")}>
 								{row.done.map((task) => (
 									<TaskCard
 										key={task.id}
 										task={task}
 										team={row.team}
-										stage='backlog'
+										stage='done'
 									/>
 								))}
 							</div>
