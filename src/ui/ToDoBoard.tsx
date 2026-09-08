@@ -11,46 +11,46 @@ type TeamRow = {
 	done: Task[];
 };
 
-function ToDoBoard() {
-	const columnHeaders = ["🚥Backlog", "📋ToDo", "🪖In Progress", "🎁Staging", "✅Done"];
-	const cellClass =
-		"border-r border-b border-slate-300 p-2 h-full text-center flex justify-center gap-2  ";
+const columnHeaders = ["🚥Backlog", "📋ToDo", "🪖In Progress", "🎁Staging", "✅Done"];
+const cellClass =
+	"border-r border-b border-slate-300 p-2 h-full text-center flex justify-center gap-2  ";
 
-	// const cellTeam =
-	// 	"border-r border-b border-slate-300 p-2 h-full text-center flex justify-center items-center";
-	const [rows, setRows] = useState<TeamRow[]>([
-		{
-			team: "teamA",
-			backlog: [
-				{
-					id: "a1",
-					title: "Task 1",
-					content: ["This is the first task", "Additional details"],
-				},
-				{ id: "a2", content: ["Task 2"] },
-			],
-			todo: [{ id: "a3", content: ["Task 3"] }],
-			inprogress: [],
-			staging: [],
-			done: [],
-		},
-		{
-			team: "teamB",
-			backlog: [{ id: "b1", content: ["Task 1"] }],
-			todo: [],
-			inprogress: [],
-			staging: [],
-			done: [],
-		},
-		{
-			team: "teamC",
-			backlog: [],
-			todo: [{ id: "c1", content: ["Task 1"] }],
-			inprogress: [],
-			staging: [],
-			done: [],
-		},
-	]);
+const initialRows: TeamRow[] = [
+	{
+		team: "teamA",
+		backlog: [
+			{
+				id: "a1",
+				title: "Task 1",
+				content: ["This is the first task", "Additional details"],
+			},
+			{ id: "a2", content: ["Task 2"] },
+		],
+		todo: [{ id: "a3", content: ["Task 3"] }],
+		inprogress: [],
+		staging: [],
+		done: [],
+	},
+	{
+		team: "teamB",
+		backlog: [{ id: "b1", content: ["Task 1"] }],
+		todo: [],
+		inprogress: [],
+		staging: [],
+		done: [],
+	},
+	{
+		team: "teamC",
+		backlog: [],
+		todo: [{ id: "c1", content: ["Task 1"] }],
+		inprogress: [],
+		staging: [],
+		done: [],
+	},
+];
+
+function ToDoBoard() {
+	const [rows, setRows] = useState<TeamRow[]>(initialRows);
 
 	function handleDragOver(e: React.DragEvent) {
 		e.preventDefault();
@@ -92,7 +92,12 @@ function ToDoBoard() {
 	return (
 		<div className='p-4 w-full h-full'>
 			<div className='grid grid-cols-[80px_repeat(5,minmax(80px,auto))] grid-rows-[50px_1fr_1fr_1fr] text-center items-center w-full h-full border-t border-l  border-slate-300'>
-				<div className={cellClass + " justify-center"}>+</div>
+				<div className={cellClass + " justify-center"}>
+					<img
+						src='../square.png'
+						className='scale-50 cursor-pointer'
+					/>
+				</div>
 				{columnHeaders.map((headers) => (
 					<div
 						key={headers}
