@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import type { TeamRow } from "../ui/ToDoBoard";
 
 function AddTaskForm({
 	setRows,
 	setIsAddingTask,
 }: {
-	setRows: React.Dispatch<React.SetStateAction<any[]>>;
+	setRows: React.Dispatch<React.SetStateAction<TeamRow[]>>;
 	setIsAddingTask: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 	const [taskName, setTaskName] = useState("");
@@ -57,8 +58,8 @@ function AddTaskForm({
 			<button
 				type='button'
 				onClick={() => setIsAddingTask(false)}
-				className='absolute top-2 right-2 text-gray-500 hover:text-gray-700 cursor-pointer'>
-				X
+				className='absolute top-2 right-4 scale-150 text-gray-500 hover:text-gray-700 cursor-pointer'>
+				x
 			</button>
 			<label className={labelClass}>
 				Task:

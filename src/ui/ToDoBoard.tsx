@@ -22,10 +22,13 @@ const initialRows: TeamRow[] = [
 		backlog: [
 			{
 				id: "a1",
-				title: "Task 1",
-				content: ["This is the first task", "Additional details"],
+				title: "Welcome to the Kanban Board",
+				content: [
+					"This is a kanban (or sticky)",
+					"Write one task for one kanban",
+				],
 			},
-			{ id: "a2", content: ["Task 2"] },
+			{ id: "a2", content: ["More on series details"] },
 		],
 		todo: [{ id: "a3", content: ["Task 3"] }],
 		inprogress: [],
@@ -34,7 +37,9 @@ const initialRows: TeamRow[] = [
 	},
 	{
 		team: "teamB",
-		backlog: [{ id: "b1", content: ["Task 1"] }],
+		backlog: [
+			{ id: "b1", title: "Task 4", content: ["Carry on, content placeholder"] },
+		],
 		todo: [],
 		inprogress: [],
 		staging: [],
@@ -199,3 +204,4 @@ function ToDoBoard() {
 }
 
 export default ToDoBoard;
+export type { TeamRow };
