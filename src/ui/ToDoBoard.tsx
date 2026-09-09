@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TaskCard from "./TaskCard";
 import type { Task, TaskStage } from "./TaskCard";
+import AddTaskForm from "../components/AddTaskForm";
 
 type TeamRow = {
 	team: string;
@@ -51,6 +52,7 @@ const initialRows: TeamRow[] = [
 
 function ToDoBoard() {
 	const [rows, setRows] = useState<TeamRow[]>(initialRows);
+	const [isAddingTask, setIsAddingTask] = useState(false);
 
 	function handleDragOver(e: React.DragEvent) {
 		e.preventDefault();
@@ -89,14 +91,26 @@ function ToDoBoard() {
 		);
 	}
 
+	{
+		console.log(isAddingTask, "isAddingTask");
+	}
 	return (
-		<div className='p-4 w-full h-full'>
+		<div className='p-4 w-full h-full '>
 			<div className='grid grid-cols-[80px_repeat(5,minmax(80px,auto))] grid-rows-[50px_1fr_1fr_1fr] text-center items-center w-full h-full border-t border-l  border-slate-300'>
-				<div className={cellClass + " justify-center"}>
+				<div className={cellClass + " justify-center relative"}>
 					<img
 						src='../square.png'
 						className='scale-50 cursor-pointer'
+						onClick={() => {
+							setIsAddingTask(!isAddingTask);
+						}}
 					/>
+					{isAddingTask && (
+						<AddTaskForm
+							setRows={setRows}
+							setIsAddingTask={setIsAddingTask}
+						/>
+					)}
 				</div>
 				{columnHeaders.map((headers) => (
 					<div
@@ -178,7 +192,7 @@ function ToDoBoard() {
 							</div>
 						</React.Fragment>
 					);
-				})}{" "}
+				})}
 			</div>
 		</div>
 	);
