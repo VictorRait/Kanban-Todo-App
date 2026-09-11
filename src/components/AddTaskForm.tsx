@@ -1,18 +1,36 @@
 import React, { useState } from "react";
 import type { TeamRow } from "../ui/ToDoBoard";
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	FormControl,
+	InputLabel,
+	MenuItem,
+	Select,
+	TextField,
+} from "@mui/material";
+
+const compactFieldSx = {
+	"& .MuiInputBase-input": { fontSize: "0.875rem" },
+	"& .MuiInputLabel-root": { fontSize: "0.875rem" },
+};
 
 function AddTaskForm({
 	setRows,
-	setIsAddingTask,
+	open,
+	onClose,
 }: {
 	setRows: React.Dispatch<React.SetStateAction<TeamRow[]>>;
-	setIsAddingTask: React.Dispatch<React.SetStateAction<boolean>>;
+	open: boolean;
+	onClose: () => void;
 }) {
 	const [taskName, setTaskName] = useState("");
 	const [taskDetails, setTaskDetails] = useState("");
 	const inputClass =
 		"border border-slate-300 rounded px-2 py-1 text-xs w-full min-w-50 in-focus:border-slate-400 focus:outline-none focus:ring-1";
-	const labelClass = "flex flex-col gap-1";
 
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -22,6 +40,7 @@ function AddTaskForm({
 			stage: formData.get("stage") as string,
 			name: formData.get("task") as string,
 			details: formData.get("details") as string,
+			image: formData.get("image") as string,
 		};
 		console.log(result);
 
@@ -38,6 +57,7 @@ function AddTaskForm({
 							id: Date.now().toString(),
 							title: result.name || undefined,
 							content: [result.details],
+							image: result.image || undefined,
 						},
 					],
 				};
@@ -46,69 +66,98 @@ function AddTaskForm({
 
 		setTaskName("");
 		setTaskDetails("");
-		setIsAddingTask(false);
+		onClose();
 		return result;
 	}
 	return (
-		<form
-			onSubmit={handleSubmit}
-			className='absolute p-6 items-start bg-white border border-slate-400  top-10 left-12  flex flex-col text-left text-sm gap-2
+		<Dialog
+			open={open}
+			onClose={onClose}>
+			<DialogTitle className='text-sm font-bold text-left'>Add Task</DialogTitle>
+
+			<form
+				onSubmit={handleSubmit}
+				className='p-6  bg-white border border-slate-400  top-10 left-12  flex flex-col text-left items-end text-sm gap-2
 
     '>
-			<button
-				type='button'
-				onClick={() => setIsAddingTask(false)}
-				className='absolute top-2 right-4 scale-150 text-gray-500 hover:text-gray-700 cursor-pointer'>
-				x
-			</button>
-			<label className={labelClass}>
-				Task:
-				<input
-					type='text'
-					name='task'
-					placeholder='What needs doing?'
-					value={taskName}
-					onChange={(e) => setTaskName(e.target.value)}
-					className={inputClass}
-				/>
-			</label>
-			<label className={labelClass}>
-				Details:
-				<textarea
-					value={taskDetails}
-					name='details'
-					onChange={(e) => setTaskDetails(e.target.value)}
-					placeholder='Enter description here...'
-					className={inputClass}></textarea>
-			</label>
-			<label className={labelClass}>
-				Team:
-				<select
-					name='team'
-					className={inputClass}>
-					<option value='teamA'>Team A</option>
-					<option value='teamB'>Team B</option>
-					<option value='teamC'>Team C</option>
-				</select>
-			</label>
-			<label className={labelClass}>
-				Stage:
-				<select
-					name='stage'
-					className={inputClass}>
-					<option value='backlog'>Backlog</option>
-					<option value='todo'>ToDo</option>
-					<option value='inprogress'>In Progress</option>
-					<option value='staging'>Staging</option>
-					<option value='done'>Done</option>
-				</select>
-			</label>
-			<button
-				className='border border-slate-400 px-2 py-1 mt-3 rounded text-xs cursor-pointer focus:outline-none focus:ring-1 self-end'
-				type='submit'>
-				Submit
-			</button>
-		</form>
+				<DialogContent
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						gap: 1,
+						p: 0,
+						minWidth: 300,
+					}}>
+					<TextField
+						type='text'
+						label='Task'
+						name='task'
+						placeholder='What needs doing?'
+						value={taskName}
+						onChange={(e) => setTaskName(e.target.value)}
+						size='small'
+						fullWidth
+						sx={{ ...compactFieldSx, mt: 0.8 }}></TextField>
+					<TextField
+						label='Details'
+						multiline
+						rows={3}
+						name='details'
+						value={taskDetails}
+						onChange={(e) => setTaskDetails(e.target.value)}
+						placeholder='Enter description here...'
+						size='small'
+						fullWidth
+						sx={compactFieldSx}></TextField>
+					<TextField
+						label='Image URL (optional)'
+						name='image'
+						placeholder='Enter image URL here...'
+						size='small'
+						fullWidth
+						sx={compactFieldSx}
+					/>
+					<FormControl
+						sx={compactFieldSx}
+						size='small'>
+						<InputLabel id='team-label'>Team:</InputLabel>
+
+						<Select
+							name='team'
+							labelId='team-label'
+							className={inputClass}
+							aria-labelledby='team-label'>
+							<MenuItem value='teamA'>Team A</MenuItem>
+							<MenuItem value='teamB'>Team B</MenuItem>
+							<MenuItem value='teamC'>Team C</MenuItem>
+						</Select>
+					</FormControl>
+					<FormControl
+						sx={compactFieldSx}
+						size='small'>
+						<InputLabel id='stage-label'>Stage:</InputLabel>
+						<Select
+							name='stage'
+							labelId='stage-label'
+							className={inputClass}>
+							<MenuItem value='backlog'>Backlog</MenuItem>
+							<MenuItem value='todo'>ToDo</MenuItem>
+							<MenuItem value='inprogress'>In Progress</MenuItem>
+							<MenuItem value='staging'>Staging</MenuItem>
+							<MenuItem value='done'>Done</MenuItem>
+						</Select>
+					</FormControl>
+				</DialogContent>
+				<DialogActions>
+					<Button
+						className='border border-slate-400 px-2 py-1 mt-3 rounded text-xs cursor-pointer focus:outline-none focus:ring-1 self-end'
+						type='submit'
+						variant='contained'>
+						Submit
+					</Button>
+				</DialogActions>
+			</form>
+		</Dialog>
 	);
 }
 

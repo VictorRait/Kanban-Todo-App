@@ -110,12 +110,12 @@ function ToDoBoard() {
 							setIsAddingTask(!isAddingTask);
 						}}
 					/>
-					{isAddingTask && (
-						<AddTaskForm
-							setRows={setRows}
-							setIsAddingTask={setIsAddingTask}
-						/>
-					)}
+
+					<AddTaskForm
+						setRows={setRows}
+						open={isAddingTask}
+						onClose={() => setIsAddingTask(false)}
+					/>
 				</div>
 				{columnHeaders.map((headers) => (
 					<div
