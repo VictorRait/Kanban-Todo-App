@@ -100,8 +100,8 @@ function ToDoBoard() {
 		console.log(isAddingTask, "isAddingTask");
 	}
 	return (
-		<div className='p-4 w-full h-full '>
-			<div className='grid grid-cols-[80px_repeat(5,minmax(80px,auto))] grid-rows-[50px_1fr_1fr_1fr] text-center items-center w-full h-full border-t border-l  border-slate-300'>
+		<div className='p-4 w-full h-full overflow-x-auto '>
+			<div className='grid grid-cols-[80px_repeat(5,minmax(80px,auto))] grid-rows-[50px_1fr_1fr_1fr] text-center items-center h-full border-t border-l  border-slate-300'>
 				<div className={cellClass + " justify-center relative"}>
 					<img
 						src='../square.png'
