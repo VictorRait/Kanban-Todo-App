@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { TeamRow } from "../ui/ToDoBoard";
+
 import {
 	Button,
 	Dialog,
@@ -18,15 +18,7 @@ const compactFieldSx = {
 	"& .MuiInputLabel-root": { fontSize: "0.875rem" },
 };
 
-function AddTaskForm({
-	setRows,
-	open,
-	onClose,
-}: {
-	setRows: React.Dispatch<React.SetStateAction<TeamRow[]>>;
-	open: boolean;
-	onClose: () => void;
-}) {
+function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) {
 	const [taskName, setTaskName] = useState("");
 	const [taskDetails, setTaskDetails] = useState("");
 	const inputClass =
@@ -43,26 +35,6 @@ function AddTaskForm({
 			image: formData.get("image") as string,
 		};
 		console.log(result);
-
-		setRows((prevRows) =>
-			prevRows.map((row) => {
-				if (row.team !== result.team) return row;
-
-				return {
-					...row,
-					team: result.team,
-					[result.stage]: [
-						...row[result.stage as keyof typeof row],
-						{
-							id: Date.now().toString(),
-							title: result.name || undefined,
-							content: [result.details],
-							image: result.image || undefined,
-						},
-					],
-				};
-			}),
-		);
 
 		setTaskName("");
 		setTaskDetails("");

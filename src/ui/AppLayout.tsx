@@ -1,12 +1,12 @@
 import { useState } from "react";
 import SideMenu from "./SideMenu";
 import ToDoBoard from "./ToDoBoard";
-import { IconButton, useMediaQuery, useTheme } from "@mui/material";
+import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
 function AppLayout() {
-	const theme = useTheme();
-	const matches = useMediaQuery(theme.breakpoints.up("md"));
+	// const theme = useTheme();
+	// const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	return (

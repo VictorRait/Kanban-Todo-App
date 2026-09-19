@@ -11,7 +11,7 @@ function DrawerContent() {
 	return (
 		<ul className='flex flex-col justify-center items-center space-y-4 h-full w-[250px] '>
 			{MenuItems.map((items) => (
-				<li>{items}</li>
+				<li key={items}>{items}</li>
 			))}
 		</ul>
 	);
