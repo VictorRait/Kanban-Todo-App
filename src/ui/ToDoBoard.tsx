@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TaskCard from "./TaskCard";
 import type { TaskStage } from "./TaskCard";
 import AddTaskForm from "../components/AddTaskForm";
-import { useQuery } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 import { gql, type TypedDocumentNode } from "@apollo/client";
 
 type FetchedTask = {
@@ -31,6 +31,19 @@ const GET_TASKS: TypedDocumentNode<TasksData> = gql`
 	}
 `;
 
+const MOVE_TASK: TypedDocumentNode<
+	FetchedTask,
+	{ id: string; team: string; stage: string }
+> = gql`
+	mutation MoveTask($id: ID!, $team: String!, $stage: String!) {
+		moveTask(id: $id, team: $team, stage: $stage) {
+			id
+			stage
+			team
+		}
+	}
+`;
+
 const teams = ["teamA", "teamB", "teamC"];
 const stages: TaskStage[] = ["backlog", "todo", "inprogress", "staging", "done"];
 const columnHeaders = ["🚥Backlog", "📋ToDo", "🪖In Progress", "🎁Staging", "✅Done"];
@@ -39,6 +52,7 @@ const cellClass =
 
 function ToDoBoard() {
 	const { data, loading, error } = useQuery(GET_TASKS);
+	const [moveTask] = useMutation(MOVE_TASK);
 	const [isAddingTask, setIsAddingTask] = useState(false);
 
 	console.log("fetched tasks:", data?.tasks, { loading, error });
@@ -49,8 +63,8 @@ function ToDoBoard() {
 
 	function handleDrop(e: React.DragEvent, targetTeam: string, targetStage: TaskStage) {
 		e.preventDefault();
-
-		console.log("dropped onto", targetTeam, targetStage);
+		const { taskId } = JSON.parse(e.dataTransfer.getData("text/plain"));
+		moveTask({ variables: { id: taskId, team: targetTeam, stage: targetStage } });
 	}
 
 	function getTasksFor(team: string, stage: string) {
