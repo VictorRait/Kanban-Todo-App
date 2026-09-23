@@ -44,6 +44,15 @@ const MOVE_TASK: TypedDocumentNode<
 	}
 `;
 
+const DELETE_TASK: TypedDocumentNode<{ deletedTask: { id: string } }, { id: string }> =
+	gql`
+		mutation DeleteTask($id: ID!) {
+			deleteTask(id: $id) {
+				id
+			}
+		}
+	`;
+
 const teams = ["teamA", "teamB", "teamC"];
 const stages: TaskStage[] = ["backlog", "todo", "inprogress", "staging", "done"];
 const columnHeaders = ["🚥Backlog", "📋ToDo", "🪖In Progress", "🎁Staging", "✅Done"];
@@ -53,6 +62,11 @@ const cellClass =
 function ToDoBoard() {
 	const { data, loading, error } = useQuery(GET_TASKS);
 	const [moveTask] = useMutation(MOVE_TASK);
+	const [deleteTask] = useMutation(DELETE_TASK, {
+		refetchQueries: ["GetTasks"],
+	});
+
+	const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
 	const [isAddingTask, setIsAddingTask] = useState(false);
 
 	console.log("fetched tasks:", data?.tasks, { loading, error });
@@ -65,6 +79,11 @@ function ToDoBoard() {
 		e.preventDefault();
 		const { taskId } = JSON.parse(e.dataTransfer.getData("text/plain"));
 		moveTask({ variables: { id: taskId, team: targetTeam, stage: targetStage } });
+	}
+
+	function handleDeleteTask(taskId: string) {
+		deleteTask({ variables: { id: taskId } });
+		setSelectedTaskId(null);
 	}
 
 	function getTasksFor(team: string, stage: string) {
@@ -115,6 +134,15 @@ function ToDoBoard() {
 											task={task}
 											team={team}
 											stage={stage}
+											isSelected={selectedTaskId === task.id}
+											onSelect={() =>
+												setSelectedTaskId(
+													selectedTaskId === task.id
+														? null
+														: task.id,
+												)
+											}
+											onDelete={() => handleDeleteTask(task.id)}
 										/>
 									))}
 								</div>

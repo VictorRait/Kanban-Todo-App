@@ -13,11 +13,14 @@ type TaskCardProps = {
 	task: Task;
 	team: string;
 	stage: string;
+	isSelected: boolean;
+	onSelect: () => void;
+	onDelete: () => void;
 };
 
 type TaskStage = "backlog" | "todo" | "inprogress" | "staging" | "done";
 
-function TaskCard({ task, team, stage }: TaskCardProps) {
+function TaskCard({ task, team, stage, isSelected, onSelect, onDelete }: TaskCardProps) {
 	function handleDragStart(e: React.DragEvent) {
 		e.dataTransfer.setData(
 			"text/plain",
@@ -29,17 +32,30 @@ function TaskCard({ task, team, stage }: TaskCardProps) {
 		<Card
 			draggable
 			onDragStart={handleDragStart}
+			onClick={onSelect}
 			variant='outlined'
+			className='relative'
 			sx={{
 				mb: 1,
 				textAlign: "left",
 				cursor: "grab",
 				borderColor: "grey.300",
 				maxWidth: 180,
+				overflow: "visible",
 			}}
 			key={task.id}>
+			{isSelected && (
+				<button
+					onClick={(e) => {
+						e.stopPropagation();
+						onDelete();
+					}}
+					className='absolute -top-2 -right-2 z-10 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold shadow-md cursor-pointer transition-transform hover:scale-110'>
+					×
+				</button>
+			)}
 			<CardContent
-				className='p-0'
+				className='p-0 '
 				sx={{ p: 1, "&:last-child": { pb: 1 } }}>
 				{task.title && (
 					<Typography
@@ -48,6 +64,7 @@ function TaskCard({ task, team, stage }: TaskCardProps) {
 						{task.title}
 					</Typography>
 				)}
+
 				<Typography
 					component='ul'
 					variant='body2'
