@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SideMenu from "./SideMenu";
-import ToDoBoard from "./ToDoBoard";
+import SideMenu from "../components/SideMenu";
+import ToDoBoard from "../components/ToDoBoard";
 import { IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 

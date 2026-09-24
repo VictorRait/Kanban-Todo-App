@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TaskCard from "./TaskCard";
-import AddTaskForm from "../components/AddTaskForm";
+import AddTaskForm from "./AddTaskForm";
 import { useMutation, useQuery } from "@apollo/client/react";
 import { DELETE_TASK, GET_TASKS, MOVE_TASK } from "../graphql/tasks";
 import { CELL_CLASS, columnHeaders, stages, teams } from "../constants/board";
