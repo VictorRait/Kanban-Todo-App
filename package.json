@@ -16,6 +16,7 @@
     "@mui/icons-material": "^9.4.0",
     "@mui/material": "^9.4.0",
     "graphql": "^17.0.2",
+    "graphql-ws": "^6.2.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

@@ -18,8 +18,6 @@ type TaskCardProps = {
 	onDelete: () => void;
 };
 
-type TaskStage = "backlog" | "todo" | "inprogress" | "staging" | "done";
-
 function TaskCard({ task, team, stage, isSelected, onSelect, onDelete }: TaskCardProps) {
 	function handleDragStart(e: React.DragEvent) {
 		e.dataTransfer.setData(
@@ -90,4 +88,4 @@ function TaskCard({ task, team, stage, isSelected, onSelect, onDelete }: TaskCar
 }
 
 export default TaskCard;
-export type { Task, TaskStage };
+export type { Task };
