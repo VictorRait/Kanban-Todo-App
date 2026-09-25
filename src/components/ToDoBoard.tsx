@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import TaskCard from "./TaskCard";
 import AddTaskForm from "./AddTaskForm";
-import { useMutation, useQuery } from "@apollo/client/react";
-import { DELETE_TASK, GET_TASKS, MOVE_TASK } from "../graphql/tasks";
+import { useMutation, useQuery, useSubscription } from "@apollo/client/react";
+import {
+	DELETE_TASK,
+	GET_TASKS,
+	MOVE_TASK,
+	TASK_UPDATED_SUBSCRIPTION,
+} from "../graphql/tasks";
 import { CELL_CLASS, columnHeaders, stages, teams } from "../constants/board";
 import type { TaskStage } from "../types/tasks";
 
 function ToDoBoard() {
-	const { data, loading, error } = useQuery(GET_TASKS);
+	const { data, loading, error, refetch } = useQuery(GET_TASKS);
 	const [moveTask] = useMutation(MOVE_TASK);
 	const [deleteTask] = useMutation(DELETE_TASK, {
 		refetchQueries: ["GetTasks"],
@@ -17,6 +22,13 @@ function ToDoBoard() {
 	const [isAddingTask, setIsAddingTask] = useState(false);
 
 	console.log("fetched tasks:", data?.tasks, { loading, error });
+
+	useSubscription(TASK_UPDATED_SUBSCRIPTION, {
+		onData: ({ data }) => {
+			console.log("Kuve update received via WebSocket:", data);
+			refetch();
+		},
+	});
 
 	function handleDragOver(e: React.DragEvent) {
 		e.preventDefault();

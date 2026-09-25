@@ -37,3 +37,16 @@ export const DELETE_TASK: TypedDocumentNode<
 		}
 	}
 `;
+
+export const TASK_UPDATED_SUBSCRIPTION = gql`
+	subscription OnTaskUpdated {
+		taskUpdated {
+			id
+			title
+			content
+			image
+			team
+			stage
+		}
+	}
+`;
