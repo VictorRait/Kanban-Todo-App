@@ -44,6 +44,7 @@ function TaskCard({ task, team, stage, isSelected, onSelect, onDelete }: TaskCar
 			key={task.id}>
 			{isSelected && (
 				<button
+					title='Delete Task'
 					onClick={(e) => {
 						e.stopPropagation();
 						onDelete();
