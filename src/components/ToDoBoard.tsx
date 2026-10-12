@@ -51,6 +51,11 @@ function ToDoBoard() {
 		);
 	}
 
+	if (loading) return <div className='text-sm font-medium'>Loading Board...</div>;
+
+	if (error)
+		return <p className='p-8 text-center text-red-500'>Error: {error.message}</p>;
+
 	return (
 		<div className='p-4 w-full h-full overflow-x-auto '>
 			<div className='grid grid-cols-[80px_repeat(5,minmax(80px,auto))] grid-rows-[50px_1fr_1fr_1fr] text-center items-center h-full border-t border-l  border-slate-300'>
