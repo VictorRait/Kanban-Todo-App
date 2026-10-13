@@ -20,18 +20,18 @@ const compactFieldSx = {
 	"& .MuiInputLabel-root": { fontSize: "0.875rem" },
 };
 
-const CREATE_TASK = gql`
-	mutation CreateTask($input: CreateTaskInput!) {
-		createTask(input: $input) {
-			id
-			title
-			content
-			image
-			team
-			stage
-		}
-	}
-`;
+// const CREATE_TASK = gql`
+// 	mutation CreateTask($input: CreateTaskInput!) {
+// 		createTask(input: $input) {
+// 			id
+// 			title
+// 			content
+// 			image
+// 			team
+// 			stage
+// 		}
+// 	}
+// `;
 
 function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) {
 	const [taskName, setTaskName] = useState("");

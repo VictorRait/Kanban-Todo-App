@@ -38,6 +38,30 @@ export const DELETE_TASK: TypedDocumentNode<
 	}
 `;
 
+export const CREATE_TASK: TypedDocumentNode<
+	{ createTask: Task },
+	{
+		input: {
+			title?: string;
+			content: string[];
+			image?: string;
+			team: string;
+			stage: string;
+		};
+	}
+> = gql`
+	mutation CreateTask($input: CreateTaskInput!) {
+		createTask(input: $input) {
+			id
+			title
+			content
+			image
+			team
+			stage
+		}
+	}
+`;
+
 export const TASK_UPDATED_SUBSCRIPTION = gql`
 	subscription OnTaskUpdated {
 		taskUpdated {
