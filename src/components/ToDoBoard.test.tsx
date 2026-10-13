@@ -49,7 +49,11 @@ describe("ToDoBoard component ", () => {
 		);
 
 		expect(screen.getByText("Loading Board...")).toBeInTheDocument();
+
 		const taskTitle = await screen.findByText("Interview Ready Task");
 		expect(taskTitle).toBeInTheDocument();
+
+		expect(screen.getByText("Pass technical interview,")).toBeInTheDocument();
+		expect(screen.getByText("Celebrate")).toBeInTheDocument();
 	});
 });
