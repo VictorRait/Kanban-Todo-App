@@ -13,7 +13,7 @@ describe("ToDoBoard component ", () => {
 						{
 							id: "task-99",
 							title: "Interview Ready Task",
-							content: ["Pass technical interview,", "Celebrate"],
+							content: ["Pass technical interview", "Celebrate"],
 							image: null,
 							team: "teamA",
 							stage: "todo",
@@ -30,7 +30,7 @@ describe("ToDoBoard component ", () => {
 					taskUpdated: {
 						id: "task-99",
 						title: "Interview Ready Task",
-						content: ["Pass technical interview,", "Celebrate"],
+						content: ["Pass technical interview", "Celebrate"],
 						image: null,
 						team: "teamA",
 						stage: "todo",
@@ -41,7 +41,7 @@ describe("ToDoBoard component ", () => {
 		},
 	];
 
-	it("should render the loading state initially, then redner tasks from GraphQL", async () => {
+	it("should render the loading state initially, then render tasks from GraphQL", async () => {
 		render(
 			<MockedProvider mocks={mocks}>
 				<ToDoBoard />

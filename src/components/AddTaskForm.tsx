@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { gql } from "@apollo/client";
+import { CREATE_TASK } from "../graphql/tasks";
 
 import {
 	Button,
@@ -20,22 +20,12 @@ const compactFieldSx = {
 	"& .MuiInputLabel-root": { fontSize: "0.875rem" },
 };
 
-// const CREATE_TASK = gql`
-// 	mutation CreateTask($input: CreateTaskInput!) {
-// 		createTask(input: $input) {
-// 			id
-// 			title
-// 			content
-// 			image
-// 			team
-// 			stage
-// 		}
-// 	}
-// `;
-
 function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) {
 	const [taskName, setTaskName] = useState("");
 	const [taskDetails, setTaskDetails] = useState("");
+	const [taskImage, setTaskImage] = useState("");
+	const [taskTeam, setTaskTeam] = useState("teamA");
+	const [taskStage, setTaskStage] = useState("backlog");
 	const [createTask] = useMutation(CREATE_TASK, {
 		// If you pass your actual GET_TASKS query document here, it forces Apollo to update the list:
 		// refetchQueries: [{ query: GET_TASKS }],
@@ -47,13 +37,8 @@ function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) 
 
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		const formData = new FormData(e.currentTarget);
-		const team = formData.get("team") as string;
-		const stage = formData.get("stage") as string;
-		const image = formData.get("image") as string;
 
-		const detailsText = (formData.get("details") as string) || "";
-		const content = detailsText
+		const content = taskDetails
 			.split("\n")
 			.map((line) => line.trim())
 			.filter((line) => line.length > 0);
@@ -63,9 +48,9 @@ function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) 
 				input: {
 					title: taskName,
 					content: content,
-					image: image || undefined,
-					stage: stage,
-					team: team,
+					image: taskImage || undefined,
+					stage: taskStage,
+					team: taskTeam,
 				},
 			},
 		});
@@ -116,6 +101,8 @@ function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) 
 						sx={compactFieldSx}></TextField>
 					<TextField
 						label='Image URL (optional)'
+						value={taskImage}
+						onChange={(e) => setTaskImage(e.target.value)}
 						name='image'
 						placeholder='Enter image URL here...'
 						size='small'
@@ -131,6 +118,8 @@ function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) 
 							name='team'
 							labelId='team-label'
 							defaultValue='teamA'
+							value={taskTeam}
+							onChange={(e) => setTaskTeam(e.target.value)}
 							className={inputClass}
 							aria-labelledby='team-label'>
 							<MenuItem value='teamA'>Team A</MenuItem>
@@ -146,6 +135,8 @@ function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) 
 							name='stage'
 							labelId='stage-label'
 							defaultValue='backlog'
+							value={taskStage}
+							onChange={(e) => setTaskStage(e.target.value)}
 							className={inputClass}>
 							<MenuItem value='backlog'>Backlog</MenuItem>
 							<MenuItem value='todo'>ToDo</MenuItem>
@@ -156,6 +147,7 @@ function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) 
 					</FormControl>
 				</DialogContent>
 				<DialogActions>
+					<Button onClick={onClose}>Cancel</Button>
 					<Button
 						className='border border-slate-400 px-2 py-1 mt-3 rounded text-xs cursor-pointer focus:outline-none focus:ring-1 self-end'
 						type='submit'

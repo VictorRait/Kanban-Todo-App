@@ -1,15 +1,25 @@
 import { gql, type TypedDocumentNode } from "@apollo/client";
-import type { Task, TasksData } from "../types/tasks";
+import type { Task, TasksData, BoardsData } from "../types/tasks";
+
+export const GET_BOARDS: TypedDocumentNode<BoardsData> = gql`
+	query GetBoards {
+		boards {
+			id
+			name
+		}
+	}
+`;
 
 export const GET_TASKS: TypedDocumentNode<TasksData> = gql`
-	query GetTasks {
-		tasks {
+	query GetTasks($boardId: ID!) {
+		tasks(boardId: $boardId) {
 			id
 			title
 			content
 			image
 			team
 			stage
+			boardId
 		}
 	}
 `;
