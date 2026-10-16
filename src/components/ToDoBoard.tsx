@@ -7,9 +7,11 @@ import {
 	GET_TASKS,
 	MOVE_TASK,
 	TASK_UPDATED_SUBSCRIPTION,
+	
 } from "../graphql/tasks";
 import { CELL_CLASS, columnHeaders, stages, teams } from "../constants/board";
 import type { TaskStage } from "../types/tasks";
+
 
 function ToDoBoard() {
 	const { data, loading, error, refetch } = useQuery(GET_TASKS);

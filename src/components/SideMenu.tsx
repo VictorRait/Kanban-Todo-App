@@ -1,23 +1,142 @@
-import { Drawer } from "@mui/material";
+import {
+	Box,
+	Button,
+	Divider,
+	Drawer,
+	List,
+	ListItem,
+	ListItemButton,
+	ListItemText,
+	Typography,
+} from "@mui/material";
+import { GET_BOARDS } from "../graphql/tasks";
+import { useState } from "react";
+import { useQuery } from "@apollo/client/react";
 
 type SideMenuProps = {
 	isOpen: boolean;
 	onClose: () => void;
+	selectedBoardId: string;
+	onSelectBoard: (boardId: string) => void;
 };
 
-const MenuItems = ["Kanban", "Calendar", "Editor", "Settings"];
+const NavItems = ["Kanban", "Calendar", "Editor", "Settings"];
 
-function DrawerContent() {
+function DrawerContent({
+	selectedBoardId,
+	onSelectBoard,
+	onClose,
+}: {
+	selectedBoardId: string;
+	onSelectBoard: (boardId: string) => void;
+	onClose: () => void;
+}) {
+	const [activeTab, setActiveTab] = useState("Kanban");
+
+	const { data, loading } = useQuery(GET_BOARDS);
+	const boards = data?.boards ?? [];
+
 	return (
-		<ul className='flex flex-col justify-center items-center space-y-4 h-full w-[250px] '>
-			{MenuItems.map((items) => (
-				<li key={items}>{items}</li>
-			))}
-		</ul>
+		<Box
+			sx={{
+				width: 250,
+				height: "100%",
+				display: "flex",
+				flexDirection: "column",
+				p: 2,
+			}}>
+			{activeTab === "Kanban" && (
+				<Box sx={{ mb: 2 }}>
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							alignItems: "center",
+							mb: 1,
+						}}>
+						<Typography
+							variant='caption'
+							sx={{
+								fontWeight: 700,
+								color: "text.secondary",
+								letterSpacing: 1,
+							}}>
+							BOARDS
+						</Typography>
+						<Button
+							size='small'
+							sx={{ fontSize: "0.75rem", p: 0.5, minWidth: "auto" }}
+							onClick={() => alert("Add board modal coming next!")}>
+							+ New
+						</Button>
+					</Box>
+
+					{loading ? (
+						<Typography
+							variant='body2'
+							sx={{ color: "text.secondary", p: 1 }}>
+							Loading boards...
+						</Typography>
+					) : (
+						<List
+							dense
+							sx={{ p: 0 }}>
+							{boards.map((board) => {
+								const isSelected = selectedBoardId === board.id;
+								return (
+									<ListItem
+										key={board.id}
+										disablePadding
+										sx={{ mb: 0.5 }}>
+										<ListItemButton
+											selected={isSelected}
+											onClick={() => {
+												onSelectBoard(board.id);
+												onClose(); // Closes drawer on mobile
+											}}
+											sx={{
+												borderRadius: 1,
+												"&.Mui-selected": {
+													bgcolor: "primary.light",
+													color: "primary.contrastText",
+													fontWeight: "bold",
+													"&:hover": {
+														bgcolor: "primary.main",
+													},
+												},
+											}}>
+											<ListItemText primary={board.name} />
+										</ListItemButton>
+									</ListItem>
+								);
+							})}
+						</List>
+					)}
+					<Divider sx={{ my: 2 }} />
+				</Box>
+			)}
+			<Typography
+				variant='caption'
+				sx={{
+					fontWeight: 700,
+					color: "text.secondary",
+					letterSpacing: 1,
+					mb: 1,
+				}}>
+				MENU
+			</Typography>
+			{/* <List
+				dense
+				sx={{ p: 0 }}>
+				{NavItems.map((item) => {
+					const isActive = activeTab === item;
+				})}
+			</List> */}
+		</Box>
 	);
 }
 
-function SideMenu({ isOpen, onClose }: SideMenuProps) {
+function SideMenu({ isOpen, onClose, selectedBoardId, onSelectBoard }: SideMenuProps) {
 	return (
 		<>
 			{/* permanent */}
@@ -34,7 +153,11 @@ function SideMenu({ isOpen, onClose }: SideMenuProps) {
 						borderColor: "divider",
 					},
 				}}>
-				<DrawerContent />
+				<DrawerContent
+					selectedBoardId={selectedBoardId}
+					onSelectBoard={onSelectBoard}
+					onClose={onClose}
+				/>
 			</Drawer>
 
 			{/* temporary for mobile */}
@@ -46,7 +169,11 @@ function SideMenu({ isOpen, onClose }: SideMenuProps) {
 				sx={{
 					display: { sm: "block", md: "none" },
 				}}>
-				<DrawerContent />
+				<DrawerContent
+					selectedBoardId={selectedBoardId}
+					onSelectBoard={onSelectBoard}
+					onClose={onClose}
+				/>
 			</Drawer>
 		</>
 	);
