@@ -20,7 +20,7 @@ const compactFieldSx = {
 	"& .MuiInputLabel-root": { fontSize: "0.875rem" },
 };
 
-function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) {
+function AddTaskForm({ open, onClose, boardId }: { open: boolean; onClose: () => void, boardId: string }) {
 	const [taskName, setTaskName] = useState("");
 	const [taskDetails, setTaskDetails] = useState("");
 	const [taskImage, setTaskImage] = useState("");
@@ -51,6 +51,7 @@ function AddTaskForm({ open, onClose }: { open: boolean; onClose: () => void }) 
 					image: taskImage || undefined,
 					stage: taskStage,
 					team: taskTeam,
+					boardId: boardId,
 				},
 			},
 		});

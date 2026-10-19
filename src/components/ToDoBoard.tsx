@@ -7,14 +7,14 @@ import {
 	GET_TASKS,
 	MOVE_TASK,
 	TASK_UPDATED_SUBSCRIPTION,
-	
 } from "../graphql/tasks";
 import { CELL_CLASS, columnHeaders, stages, teams } from "../constants/board";
 import type { TaskStage } from "../types/tasks";
 
-
-function ToDoBoard() {
-	const { data, loading, error, refetch } = useQuery(GET_TASKS);
+function ToDoBoard({ boardId }: { boardId: string }) {
+	const { data, loading, error, refetch } = useQuery(GET_TASKS, {
+		variables: { boardId },
+	});
 	const [moveTask] = useMutation(MOVE_TASK);
 	const [deleteTask] = useMutation(DELETE_TASK, {
 		refetchQueries: ["GetTasks"],
@@ -71,6 +71,7 @@ function ToDoBoard() {
 					/>
 
 					<AddTaskForm
+						boardId={boardId}
 						open={isAddingTask}
 						onClose={() => setIsAddingTask(false)}
 					/>

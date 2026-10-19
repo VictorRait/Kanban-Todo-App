@@ -57,6 +57,7 @@ export const CREATE_TASK: TypedDocumentNode<
 			image?: string;
 			team: string;
 			stage: string;
+			boardId: string;
 		};
 	}
 > = gql`

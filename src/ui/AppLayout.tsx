@@ -8,12 +8,15 @@ function AppLayout() {
 	// const theme = useTheme();
 	// const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [selectedBoardId, setSelectedBoardId] = useState("board-1");
 
 	return (
 		<div className='flex h-screen'>
 			<SideMenu
 				isOpen={isMenuOpen}
 				onClose={() => setIsMenuOpen(false)}
+				selectedBoardId={selectedBoardId}
+				onSelectBoard={(id) => setSelectedBoardId(id)}
 			/>
 			<div className='flex flex-col w-full min-w-0 items-center relative'>
 				<div className='w-full flex items-center justify-center pt-2'>
@@ -29,7 +32,7 @@ function AppLayout() {
 					</IconButton>
 					<div>Welcome Board</div>
 				</div>
-				<ToDoBoard />
+				<ToDoBoard boardId={selectedBoardId} />
 			</div>
 		</div>
 	);

@@ -1,6 +1,5 @@
 import {
 	Box,
-	Button,
 	Divider,
 	Drawer,
 	List,
@@ -63,12 +62,6 @@ function DrawerContent({
 							}}>
 							BOARDS
 						</Typography>
-						<Button
-							size='small'
-							sx={{ fontSize: "0.75rem", p: 0.5, minWidth: "auto" }}
-							onClick={() => alert("Add board modal coming next!")}>
-							+ New
-						</Button>
 					</Box>
 
 					{loading ? (
@@ -112,6 +105,25 @@ function DrawerContent({
 							})}
 						</List>
 					)}
+					<ListItem
+						disablePadding
+						sx={{ mt: 1 }}>
+						<ListItemButton
+							onClick={() => alert("Add board modal coming next!")}
+							sx={{
+								"&:hover": {
+									bgColor: "action.hover",
+								},
+							}}>
+							<ListItemText
+								primary='➕ New board...'
+								slotProps={{
+									primary: { variant: "body2" },
+								}}
+							/>
+						</ListItemButton>
+					</ListItem>
+
 					<Divider sx={{ my: 2 }} />
 				</Box>
 			)}
@@ -125,13 +137,28 @@ function DrawerContent({
 				}}>
 				MENU
 			</Typography>
-			{/* <List
+			<List
 				dense
 				sx={{ p: 0 }}>
 				{NavItems.map((item) => {
 					const isActive = activeTab === item;
+					return (
+						<ListItem
+							key={item}
+							disablePadding
+							sx={{ mb: 0.5 }}>
+							<ListItemButton
+								selected={isActive}
+								onClick={() => setActiveTab(item)}>
+								<ListItemText
+									primary={item}
+									slotProps={{ primary: { variant: "body2" } }}
+								/>
+							</ListItemButton>
+						</ListItem>
+					);
 				})}
-			</List> */}
+			</List>
 		</Box>
 	);
 }
