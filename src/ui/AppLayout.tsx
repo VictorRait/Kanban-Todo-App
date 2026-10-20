@@ -7,7 +7,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 function AppLayout() {
 	// const theme = useTheme();
 	// const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const [boardName, setBoardName] = useState("Website Redesign");
 	const [selectedBoardId, setSelectedBoardId] = useState("board-1");
 
 	return (
@@ -17,6 +19,7 @@ function AppLayout() {
 				onClose={() => setIsMenuOpen(false)}
 				selectedBoardId={selectedBoardId}
 				onSelectBoard={(id) => setSelectedBoardId(id)}
+				setBoardName={setBoardName}
 			/>
 			<div className='flex flex-col w-full min-w-0 items-center relative'>
 				<div className='w-full flex items-center justify-center pt-2'>
@@ -30,9 +33,12 @@ function AppLayout() {
 						}}>
 						<MenuIcon />
 					</IconButton>
-					<div>Welcome Board</div>
+					<div>{boardName} Board</div>
 				</div>
-				<ToDoBoard boardId={selectedBoardId} />
+				<ToDoBoard
+					key={selectedBoardId}
+					boardId={selectedBoardId}
+				/>
 			</div>
 		</div>
 	);

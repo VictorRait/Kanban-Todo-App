@@ -1,5 +1,5 @@
 import { gql, type TypedDocumentNode } from "@apollo/client";
-import type { Task, TasksData, BoardsData } from "../types/tasks";
+import type { Task, TasksData, BoardsData, Board } from "../types/tasks";
 
 export const GET_BOARDS: TypedDocumentNode<BoardsData> = gql`
 	query GetBoards {
@@ -85,3 +85,13 @@ export const TASK_UPDATED_SUBSCRIPTION = gql`
 		}
 	}
 `;
+
+export const CREATE_BOARD: TypedDocumentNode<{ createBoard: Board }, { name: string }> =
+	gql`
+		mutation createBoard($name: String!) {
+			createBoard(name: $name) {
+				id
+				name
+			}
+		}
+	`;

@@ -1,22 +1,29 @@
 import {
 	Box,
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
 	Divider,
 	Drawer,
 	List,
 	ListItem,
 	ListItemButton,
 	ListItemText,
+	TextField,
 	Typography,
 } from "@mui/material";
-import { GET_BOARDS } from "../graphql/tasks";
+import { CREATE_BOARD, GET_BOARDS } from "../graphql/tasks";
 import { useState } from "react";
-import { useQuery } from "@apollo/client/react";
+import { useMutation, useQuery } from "@apollo/client/react";
 
 type SideMenuProps = {
 	isOpen: boolean;
 	onClose: () => void;
 	selectedBoardId: string;
 	onSelectBoard: (boardId: string) => void;
+	setBoardName: (name: string) => void;
 };
 
 const NavItems = ["Kanban", "Calendar", "Editor", "Settings"];
@@ -25,16 +32,44 @@ function DrawerContent({
 	selectedBoardId,
 	onSelectBoard,
 	onClose,
+	setBoardName,
 }: {
 	selectedBoardId: string;
 	onSelectBoard: (boardId: string) => void;
 	onClose: () => void;
+	setBoardName: (name: string) => void;
 }) {
 	const [activeTab, setActiveTab] = useState("Kanban");
+
+	const [isAddingBoard, setIsAddingBoard] = useState(false);
+	const [newBoardName, setNewBoardName] = useState("");
 
 	const { data, loading } = useQuery(GET_BOARDS);
 	const boards = data?.boards ?? [];
 
+	const [createBoard, { loading: isCreating }] = useMutation(CREATE_BOARD, {
+		refetchQueries: [{ query: GET_BOARDS }],
+	});
+
+	async function handleCreateBoard(e: React.SubmitEvent<HTMLFormElement>) {
+		e.preventDefault();
+		if (!newBoardName.trim()) return;
+
+		try {
+			const result = await createBoard({
+				variables: { name: newBoardName.trim() },
+			});
+
+			if (result.data?.createBoard) {
+				onSelectBoard(result.data.createBoard.id);
+			}
+
+			setNewBoardName("");
+			setIsAddingBoard(false);
+		} catch (err) {
+			console.error("Failed to create board:", err);
+		}
+	}
 	return (
 		<Box
 			sx={{
@@ -85,6 +120,7 @@ function DrawerContent({
 											selected={isSelected}
 											onClick={() => {
 												onSelectBoard(board.id);
+												setBoardName(board.name);
 												onClose(); // Closes drawer on mobile
 											}}
 											sx={{
@@ -108,13 +144,7 @@ function DrawerContent({
 					<ListItem
 						disablePadding
 						sx={{ mt: 1 }}>
-						<ListItemButton
-							onClick={() => alert("Add board modal coming next!")}
-							sx={{
-								"&:hover": {
-									bgColor: "action.hover",
-								},
-							}}>
+						<ListItemButton onClick={() => setIsAddingBoard(true)}>
 							<ListItemText
 								primary='➕ New board...'
 								slotProps={{
@@ -159,11 +189,49 @@ function DrawerContent({
 					);
 				})}
 			</List>
+			<Dialog
+				open={isAddingBoard}
+				onClose={() => setIsAddingBoard(false)}>
+				<DialogTitle>Add New Board</DialogTitle>
+				<form onSubmit={handleCreateBoard}>
+					<DialogContent sx={{ minWidth: 280, pt: 1 }}>
+						<TextField
+							fullWidth
+							size='small'
+							label='Board Name'
+							placeholder='e.g. Q4 Sprint, Launch Plan'
+							value={newBoardName}
+							onChange={(e) => setNewBoardName(e.target.value)}
+							required
+						/>
+					</DialogContent>
+					<DialogActions sx={{ px: 3, pb: 2 }}>
+						<Button
+							onClick={() => setIsAddingBoard(false)}
+							size='small'>
+							Cancel
+						</Button>
+						<Button
+							type='submit'
+							variant='contained'
+							size='small'
+							disabled={isCreating}>
+							{isCreating ? "Creating..." : "Create"}
+						</Button>
+					</DialogActions>
+				</form>
+			</Dialog>
 		</Box>
 	);
 }
 
-function SideMenu({ isOpen, onClose, selectedBoardId, onSelectBoard }: SideMenuProps) {
+function SideMenu({
+	isOpen,
+	onClose,
+	selectedBoardId,
+	onSelectBoard,
+	setBoardName,
+}: SideMenuProps) {
 	return (
 		<>
 			{/* permanent */}
@@ -184,6 +252,7 @@ function SideMenu({ isOpen, onClose, selectedBoardId, onSelectBoard }: SideMenuP
 					selectedBoardId={selectedBoardId}
 					onSelectBoard={onSelectBoard}
 					onClose={onClose}
+					setBoardName={setBoardName}
 				/>
 			</Drawer>
 
@@ -200,6 +269,7 @@ function SideMenu({ isOpen, onClose, selectedBoardId, onSelectBoard }: SideMenuP
 					selectedBoardId={selectedBoardId}
 					onSelectBoard={onSelectBoard}
 					onClose={onClose}
+					setBoardName={setBoardName}
 				/>
 			</Drawer>
 		</>
