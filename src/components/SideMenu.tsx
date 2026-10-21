@@ -7,6 +7,7 @@ import {
 	DialogTitle,
 	Divider,
 	Drawer,
+	IconButton,
 	List,
 	ListItem,
 	ListItemButton,
@@ -77,7 +78,7 @@ function DrawerContent({
 
 	async function handleDeleteBoard(boardId: string, e: React.MouseEvent) {
 		e.stopPropagation();
-
+		console.log("The boardId I clicked is:", boardId);
 		if (boards.length === 1) {
 			alert("You must keep at least one board!");
 			return;
@@ -95,7 +96,7 @@ function DrawerContent({
 				onSelectBoard(boardToSwap.id);
 			}
 		} catch (err) {
-			console.error(err);
+			console.error("Failed to delete Board:", err);
 		}
 	}
 
@@ -144,7 +145,17 @@ function DrawerContent({
 									<ListItem
 										key={board.id}
 										disablePadding
-										sx={{ mb: 0.5 }}>
+										sx={{ mb: 0.5 }}
+										secondaryAction={
+											<IconButton
+												size='small'
+												title='Delete board'
+												onClick={(e) =>
+													handleDeleteBoard(board.id, e)
+												}>
+												✕
+											</IconButton>
+										}>
 										<ListItemButton
 											selected={isSelected}
 											onClick={() => {

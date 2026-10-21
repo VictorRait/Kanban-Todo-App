@@ -100,7 +100,7 @@ export const DELETE_BOARD: TypedDocumentNode<
 	{ deleteBoard: { id: string } },
 	{ id: string }
 > = gql`
-	mutation deleteBoard($id: String!) {
+	mutation deleteBoard($id: ID!) {
 		deleteBoard(id: $id) {
 			id
 		}
