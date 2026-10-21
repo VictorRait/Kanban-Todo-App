@@ -14,7 +14,7 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import { CREATE_BOARD, GET_BOARDS } from "../graphql/tasks";
+import { CREATE_BOARD, DELETE_BOARD, GET_BOARDS } from "../graphql/tasks";
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client/react";
 
@@ -70,6 +70,35 @@ function DrawerContent({
 			console.error("Failed to create board:", err);
 		}
 	}
+
+	const [deleteBoard] = useMutation(DELETE_BOARD, {
+		refetchQueries: [{ query: GET_BOARDS }, "GetTasks"],
+	});
+
+	async function handleDeleteBoard(boardId: string, e: React.MouseEvent) {
+		e.stopPropagation();
+
+		if (boards.length === 1) {
+			alert("You must keep at least one board!");
+			return;
+		}
+
+		const confirmed = window.confirm("Are you sure?");
+		if (!confirmed) return;
+
+		try {
+			await deleteBoard({ variables: { id: boardId } });
+
+			if (selectedBoardId === boardId) {
+				const boardToSwap = boards.find((b) => b.id !== boardId);
+				if (!boardToSwap) throw new Error("No other existing board found!");
+				onSelectBoard(boardToSwap.id);
+			}
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
 	return (
 		<Box
 			sx={{

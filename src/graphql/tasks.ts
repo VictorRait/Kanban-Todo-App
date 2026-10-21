@@ -95,3 +95,14 @@ export const CREATE_BOARD: TypedDocumentNode<{ createBoard: Board }, { name: str
 			}
 		}
 	`;
+
+export const DELETE_BOARD: TypedDocumentNode<
+	{ deleteBoard: { id: string } },
+	{ id: string }
+> = gql`
+	mutation deleteBoard($id: String!) {
+		deleteBoard(id: $id) {
+			id
+		}
+	}
+`;
