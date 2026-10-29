@@ -44,7 +44,7 @@ describe("ToDoBoard component ", () => {
 	it("should render the loading state initially, then render tasks from GraphQL", async () => {
 		render(
 			<MockedProvider mocks={mocks}>
-				<ToDoBoard />
+				<ToDoBoard boardId='board-1' />
 			</MockedProvider>,
 		);
 

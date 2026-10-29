@@ -25,6 +25,8 @@ type SideMenuProps = {
 	selectedBoardId: string;
 	onSelectBoard: (boardId: string) => void;
 	setBoardName: (name: string) => void;
+	activeTab: string;
+	setActiveTab: (tab: string) => void;
 };
 
 const NavItems = ["Kanban", "Calendar", "Editor", "Settings"];
@@ -34,14 +36,16 @@ function DrawerContent({
 	onSelectBoard,
 	onClose,
 	setBoardName,
+	activeTab,
+	setActiveTab,
 }: {
 	selectedBoardId: string;
 	onSelectBoard: (boardId: string) => void;
 	onClose: () => void;
 	setBoardName: (name: string) => void;
+	activeTab: string;
+	setActiveTab: (tab: string) => void;
 }) {
-	const [activeTab, setActiveTab] = useState("Kanban");
-
 	const [isAddingBoard, setIsAddingBoard] = useState(false);
 	const [newBoardName, setNewBoardName] = useState("");
 
@@ -147,14 +151,16 @@ function DrawerContent({
 										disablePadding
 										sx={{ mb: 0.5 }}
 										secondaryAction={
-											<IconButton
-												size='small'
-												title='Delete board'
-												onClick={(e) =>
-													handleDeleteBoard(board.id, e)
-												}>
-												✕
-											</IconButton>
+											isSelected && (
+												<IconButton
+													size='small'
+													title='Delete board'
+													onClick={(e) =>
+														handleDeleteBoard(board.id, e)
+													}>
+													✕
+												</IconButton>
+											)
 										}>
 										<ListItemButton
 											selected={isSelected}
@@ -271,6 +277,8 @@ function SideMenu({
 	selectedBoardId,
 	onSelectBoard,
 	setBoardName,
+	activeTab,
+	setActiveTab,
 }: SideMenuProps) {
 	return (
 		<>
@@ -293,6 +301,8 @@ function SideMenu({
 					onSelectBoard={onSelectBoard}
 					onClose={onClose}
 					setBoardName={setBoardName}
+					activeTab={activeTab}
+					setActiveTab={setActiveTab}
 				/>
 			</Drawer>
 
@@ -310,6 +320,8 @@ function SideMenu({
 					onSelectBoard={onSelectBoard}
 					onClose={onClose}
 					setBoardName={setBoardName}
+					activeTab={activeTab}
+					setActiveTab={setActiveTab}
 				/>
 			</Drawer>
 		</>

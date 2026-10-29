@@ -78,7 +78,7 @@ function TaskCard({ task, team, stage, isSelected, onSelect, onDelete }: TaskCar
 				{task.image && (
 					<CardMedia
 						component='img'
-						image='https://images.unsplash.com/photo-1788042286484-ac22dffd0c5c?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+						image={task.image}
 						alt={task.title}
 						sx={{ height: 90, objectFit: "cover", mt: 1 }}
 					/>
