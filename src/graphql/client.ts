@@ -5,12 +5,12 @@ import { OperationTypeNode } from "graphql";
 import { InMemoryCache } from "@apollo/client";
 
 const httpLink = new HttpLink({
-	uri: "http://localhost:4000/graphql",
+	uri: "https://kanban-server-pyrd.onrender.com/graphql",
 });
 
 const wsLink = new GraphQLWsLink(
 	createClient({
-		url: "ws://localhost:4000/graphql",
+		url: "wss://kanban-server-pyrd.onrender.com/graphql",
 	}),
 );
 
